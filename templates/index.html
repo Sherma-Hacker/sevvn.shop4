@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sevnn - Home</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+
+<body>
+<canvas id="bgCanvas"></canvas>
+
+  <header>
+    <h1>Welcome to Sevnn</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/shop">Shop</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Explore our latest fashion collection.</h2>
+    <div class="product-preview">
+      <h3>Featured Products</h3>
+      <div class="featured-products">
+        {% for product in products %}
+          <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-item">
+            <img src="{{ product.image }}" alt="{{ product.name }}" />
+            <h4>{{ product.name }}</h4>
+            <p>${{ product.price }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+
+  <footer class="contact-info">
+
+    <div class="contact-item">
+      <span>Instagram: @sevvn.shop</span>
+    </div>
+    <div class="contact-item">
+      <span>TikTok: @sevvn.shop</span>
+    </div>
+
+  </footer>
+  <script>
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 100; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 1,
+        dy: (Math.random() - 0.5) * 1
+    });
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff4d4d"; // redish color (match your brand)
+        ctx.fill();
+    });
+}
+
+function update() {
+    particles.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+}
+
+function animate() {
+    draw();
+    update();
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
